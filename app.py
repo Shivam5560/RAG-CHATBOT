@@ -1,3 +1,4 @@
+# app.py
 import streamlit as st
 from llama_index.core import (
     VectorStoreIndex,
@@ -15,11 +16,10 @@ import os
 load_dotenv()
 from llama_index.embeddings.mistralai import MistralAIEmbedding
 
-MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY')
-GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+load_dotenv()
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-
-# Function to save uploaded files to a temporary directory
 def save_uploaded_files(uploaded_files):
     temp_dir = tempfile.mkdtemp()
     file_paths = []
@@ -30,7 +30,6 @@ def save_uploaded_files(uploaded_files):
         file_paths.append(file_path)
     return file_paths
 
-# Function to generate the model based on uploaded files
 def generate_model(file_paths):
     try:
         if not file_paths:
@@ -60,86 +59,74 @@ def generate_model(file_paths):
         st.error(f"An error occurred: {e}")
         return None
 
-# Main Streamlit application
 def main():
-    # Set page configuration
     st.set_page_config(
         page_title="RAG Based Chatbot",
         page_icon="🤖",
         layout="centered",
         initial_sidebar_state="expanded"
     )
+    st.markdown("""
+<style>
+    [data-testid=stSidebar] {
+        background-color: #FFFFFF;
+    }
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #B5FFE9; /* Body theme color */
+    }
+    
+    .stApp {
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        background-color: #C5E0D8; /* Body theme color */
+    }
+    
+    # .element-container:has(>.stTextArea), .stTextArea {
+    #     width: 800px !important;
+    # }
+    .stTextArea textarea {
+        height: 400px; 
+        width : 1200px;
+    }
+    
+    .stMain {
+        padding: 20px;
+    }
+    
+    .stTextInput {
+        border: none; /* Remove black line border */
+        padding: 10px;
+        border-radius: 4px;
+        color: #4B0082; /* Indigo */
+    }
+    
+    .stTextInput:focus {
+        outline: none;
+        box-shadow: 0 0 5px #8A2BE2; /* BlueViolet */
+    }
+    
+    .stButton:not([type="submit"]) {
+        background-color: #B3CDD1; 
+        max-width: fit-content;
+        color: #B3CDD1;
+    }
+</style>
+""", unsafe_allow_html=True)
+    st.markdown("""
+    # Welcome to our RAG Based Chatbot! 
+    ###### This chatbot utilizes a Retrieval-Augmented Generation (RAG) model to provide accurate and relevant responses based on the information contained in the uploaded files.
 
-    # Define CSS styles
-    css = """
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #F0F8FF; /* Light blue */
-        }
-
-        .sidebar .sidebar-content {
-            background-color: #FFFFFF;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
-        .main .block-container {
-            background-color: #FFFFFF;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .stButton {
-            background-color: #4B0082; /* Indigo */
-            color: #FFFFFF;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .stButton:hover {
-            background-color: #8A2BE2; /* BlueViolet */
-        }
-
-        .stTextInput {
-            border: 2px solid #4B0082; /* Indigo */
-            padding: 10px;
-            border-radius: 4px;
-            color: #4B0082; /* Indigo */
-        }
-
-        .stTextInput:focus {
-            outline: none;
-            box-shadow: 0 0 5px #8A2BE2; /* BlueViolet */
-        }
-    </style>
-    """
-
-    # Inject CSS styles
-    st.markdown(css, unsafe_allow_html=True)
-
-    # Add logo and description
-    st.sidebar.title("BRAINY BUDDY")
-    st.sidebar.markdown("""
-    #### Welcome to our RAG Based Chatbot! This chatbot utilizes a Retrieval-Augmented Generation (RAG) model to provide accurate and relevant responses based on the information contained in the uploaded files.
-
-    Please upload your PDF files, and we'll handle the rest.
+    
     """)
+    st.sidebar.title("BRAINY BUDDY")
 
     if "file_paths" not in st.session_state:
         st.session_state.file_paths = None
     if "model" not in st.session_state:
         st.session_state.model = None
 
-    # Sidebar for file upload
     with st.sidebar:
-        uploaded_files = st.file_uploader(label='Upload your files', type=['pdf'], accept_multiple_files=True)
+        uploaded_files = st.file_uploader(label='',type=['pdf'], accept_multiple_files=True)
         if uploaded_files:
             file_paths = save_uploaded_files(uploaded_files)
             if file_paths != st.session_state.file_paths:
@@ -148,13 +135,13 @@ def main():
 
     if st.session_state.model:
         user_input = st.text_input("Question", key="question_input", placeholder="Ask your question here...", label_visibility="collapsed")
-        col1, col2, col3 = st.columns([1, 1, 1])
+        _,col2,_ = st.columns(3)
         with col2:
-            button = st.button(label='Enter')
+            button = st.button(label='Enter',type='primary')
         if button:
             with st.spinner():
                 response = str(st.session_state.model.query(user_input).response)
-                st.write(response)
+                st.text_area("Response", value=response)
     else:
         st.info("Please upload files to initiate the chatbot.")
 
