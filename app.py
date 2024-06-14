@@ -45,7 +45,7 @@ def generate_model(file_paths):
         st.info("Initializing embedding model and language model...")
         # embed_model = MistralAIEmbedding(api_key=MISTRAL_API_KEY)
         embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2",token=HF_KEY)
-        llm = Groq(model="llama3-8b-8192", api_key=GROQ_API_KEY)
+        llm = Groq(model="mixtral-8x7b-32768", api_key=GROQ_API_KEY)
         st.info("Creating service context...")
         service_context = ServiceContext.from_defaults(embed_model=embed_model, llm=llm)
         st.info("Creating vector index from documents...")
