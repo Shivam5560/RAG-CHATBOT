@@ -18,6 +18,7 @@ from llama_index.embeddings.mistralai import MistralAIEmbedding
 
 load_dotenv()
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+HF_KEY  =  os.getenv("HF_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 def save_uploaded_files(uploaded_files):
@@ -42,8 +43,9 @@ def generate_model(file_paths):
         text_splitter = SentenceSplitter(chunk_size=1024, chunk_overlap=200)
         nodes = text_splitter.get_nodes_from_documents(documents, show_progress=True)
         st.info("Initializing embedding model and language model...")
-        embed_model = MistralAIEmbedding(api_key=MISTRAL_API_KEY)
-        llm = Groq(model="llama3-70b-8192", api_key=GROQ_API_KEY)
+        # embed_model = MistralAIEmbedding(api_key=MISTRAL_API_KEY)
+        embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2",token=HF_KEY)
+        llm = Groq(model="llama3-8b-8192", api_key=GROQ_API_KEY)
         st.info("Creating service context...")
         service_context = ServiceContext.from_defaults(embed_model=embed_model, llm=llm)
         st.info("Creating vector index from documents...")
@@ -53,7 +55,7 @@ def generate_model(file_paths):
         storage_context = StorageContext.from_defaults(persist_dir="./storage_mini")
         index = load_index_from_storage(storage_context, service_context=service_context)
         st.success("PDF loaded successfully!")
-        chat_engine = index.as_query_engine(service_context=service_context, similarity_top_k=20)
+        chat_engine = index.as_query_engine(service_context=service_context, similarity_top_k=2,BasePromptTemplate="You are an agent designed to answer queries over a set of given papers. Please always use the tools provided to answer a question. Do not rely on prior knowledge. Also try to give the responses in the form of bullet points for ease on the end user side.")
         return chat_engine
     except Exception as e:
         st.error(f"An error occurred: {e}")
