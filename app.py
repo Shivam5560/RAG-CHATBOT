@@ -18,6 +18,7 @@ from llama_index.embeddings.mistralai import MistralAIEmbedding
 MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY')
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
+
 # Function to save uploaded files to a temporary directory
 def save_uploaded_files(uploaded_files):
     temp_dir = tempfile.mkdtemp()
@@ -69,9 +70,59 @@ def main():
         initial_sidebar_state="expanded"
     )
 
-    # Load CSS styles
-    with open("streamlit.css") as f:
-        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+    # Define CSS styles
+    css = """
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F0F8FF; /* Light blue */
+        }
+
+        .sidebar .sidebar-content {
+            background-color: #FFFFFF;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .main .block-container {
+            background-color: #FFFFFF;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stButton {
+            background-color: #4B0082; /* Indigo */
+            color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .stButton:hover {
+            background-color: #8A2BE2; /* BlueViolet */
+        }
+
+        .stTextInput {
+            border: 2px solid #4B0082; /* Indigo */
+            padding: 10px;
+            border-radius: 4px;
+            color: #4B0082; /* Indigo */
+        }
+
+        .stTextInput:focus {
+            outline: none;
+            box-shadow: 0 0 5px #8A2BE2; /* BlueViolet */
+        }
+    </style>
+    """
+
+    # Inject CSS styles
+    st.markdown(css, unsafe_allow_html=True)
 
     # Add logo and description
     st.sidebar.title("BRAINY BUDDY")
