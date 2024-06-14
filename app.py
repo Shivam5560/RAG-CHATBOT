@@ -10,11 +10,13 @@ from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.llms.groq import Groq
 import tempfile
+from dotenv import load_dotenv
 import os
+load_dotenv()
 from llama_index.embeddings.mistralai import MistralAIEmbedding
 
-MISTRAL_API_KEY = '9AbUaxZvOh9hEqzG03BPRfiQ5VisqipM'
-GROQ_API_KEY = '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'
+MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY')
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
 # Function to save uploaded files to a temporary directory
 def save_uploaded_files(uploaded_files):
@@ -68,7 +70,7 @@ def main():
     )
 
     # Load CSS styles
-    with open("frontend/streamlit.css") as f:
+    with open("streamlit.css") as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
     # Add logo and description
