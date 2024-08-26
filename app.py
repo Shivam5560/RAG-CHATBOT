@@ -1,12 +1,18 @@
 # app.py
 import streamlit as st
-from llama_index.core import (
+"""from llama_index.core import (
     VectorStoreIndex,
     SimpleDirectoryReader,
     StorageContext,
     ServiceContext,
     load_index_from_storage
-)
+)"""
+from llama_index.core import SimpleDirectoryReader
+from llama_index.core.indices import VectorStoreIndex
+from llama_index.core.storage import StorageContext
+from llama_index.core import load_index_from_storage
+from llama_index.core.service_context import ServiceContext
+
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.llms.groq import Groq
