@@ -54,13 +54,13 @@ def generate_model(file_paths):
         Settings.embed_model = embed_model
         Settings.llm = llm
         st.info("Creating vector index from documents...")
-        vector_index = VectorStoreIndex.from_documents(documents, show_progress=True, service_context=service_context, node_parser=nodes)
+        vector_index = VectorStoreIndex.from_documents(documents, show_progress=True,node_parser=nodes)# service_context=service_context, 
         vector_index.storage_context.persist(persist_dir="./storage_mini")
         st.info("Loading index from storage...")
         storage_context = StorageContext.from_defaults(persist_dir="./storage_mini")
-        index = load_index_from_storage(storage_context, service_context=service_context)
+        index = load_index_from_storage(storage_context,) #service_context=service_context)
         st.success("PDF loaded successfully!")
-        chat_engine = index.as_query_engine(service_context=service_context, similarity_top_k=2,BasePromptTemplate="You are an agent designed to answer queries over a set of given papers. Please always use the tools provided to answer a question. Do not rely on prior knowledge. Also try to give the responses in the form of bullet points for ease on the end user side.")
+        chat_engine = index.as_query_engine(similarity_top_k=2,BasePromptTemplate="You are an agent designed to answer queries over a set of given papers. Please always use the tools provided to answer a question. Do not rely on prior knowledge. Also try to give the responses in the form of bullet points for ease on the end user side.Given the context information above I want you to think step by step to answer the query in a crisp manner, incase case you don't know the answer say 'I don't know!'.")
         return chat_engine
     except Exception as e:
         st.error(f"An error occurred: {e}")
