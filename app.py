@@ -18,7 +18,7 @@ from llama_index.llms.groq import Groq
 import tempfile
 from dotenv import load_dotenv
 import os
-from llama_index.embeddings.mistralai import MistralAIEmbedding
+#from llama_index.embeddings.mistralai import MistralAIEmbedding
 
 load_dotenv()
 HF_KEY  =  os.getenv("HF_KEY")
