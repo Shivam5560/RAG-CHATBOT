@@ -120,7 +120,7 @@ def main():
 </style>
 """, unsafe_allow_html=True)
     st.markdown("""
-    # Welcome to our RAG Based Chatbot! 
+    # Welcome to BRAINY BUDDY! 
     ###### This chatbot utilizes a Retrieval-Augmented Generation (RAG) model to provide accurate and relevant responses based on the information contained in the uploaded files.
 
     
@@ -148,7 +148,8 @@ def main():
         if button:
             with st.spinner():
                 response = str(st.session_state.model.query(user_input).response)
-                st.text_area("Response", value=response)
+                #st.text_area("Response", value=response)
+                st.markdown(f"**Formatted Response:**\n{response}")
     else:
         st.info("Please upload files to initiate the chatbot.")
 
