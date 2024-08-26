@@ -13,11 +13,9 @@ from llama_index.llms.groq import Groq
 import tempfile
 from dotenv import load_dotenv
 import os
-load_dotenv()
 from llama_index.embeddings.mistralai import MistralAIEmbedding
 
 load_dotenv()
-MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
 HF_KEY  =  os.getenv("HF_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
@@ -45,7 +43,7 @@ def generate_model(file_paths):
         st.info("Initializing embedding model and language model...")
         # embed_model = MistralAIEmbedding(api_key=MISTRAL_API_KEY)
         embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2",token=HF_KEY)
-        llm = Groq(model="mixtral-8x7b-32768", api_key=GROQ_API_KEY)
+        llm = Groq(model="llama-3.1-8b-instant", api_key=GROQ_API_KEY)
         st.info("Creating service context...")
         service_context = ServiceContext.from_defaults(embed_model=embed_model, llm=llm)
         st.info("Creating vector index from documents...")
