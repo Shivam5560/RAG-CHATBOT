@@ -10,7 +10,7 @@ from llama_index.core import SimpleDirectoryReader
 from llama_index.core.indices import VectorStoreIndex
 from llama_index.core.storage import StorageContext
 from llama_index.core import load_index_from_storage
-from llama_index.core.service_context import ServiceContext
+from llama_index.core import Settings
 
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core.node_parser import SentenceSplitter
@@ -50,7 +50,9 @@ def generate_model(file_paths):
         embed_model = HuggingFaceEmbedding(model_name="sentence-transformers/all-MiniLM-L6-v2",token=HF_KEY)
         llm = Groq(model="llama-3.1-8b-instant", api_key=GROQ_API_KEY)
         st.info("Creating service context...")
-        service_context = ServiceContext.from_defaults(embed_model=embed_model, llm=llm)
+        # service_context = ServiceContext.from_defaults(embed_model=embed_model, llm=llm)
+        Settings.embed_model = embed_model
+        Settings.llm = llm
         st.info("Creating vector index from documents...")
         vector_index = VectorStoreIndex.from_documents(documents, show_progress=True, service_context=service_context, node_parser=nodes)
         vector_index.storage_context.persist(persist_dir="./storage_mini")
